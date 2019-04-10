@@ -1,4 +1,4 @@
-const {tenerator, getPool} = require('./pool');
+const {getPool} = require('./pool');
 
 /**
  * @see module:./MIDMaker
@@ -47,28 +47,11 @@ class MIDMaker {
   }
 
   /**
-   * @function encodePool
-   * @param {Object} cl this
-   * @return {Object} An Object
-   */
-  static encodePool(cl) {
-    return (
-      tenerator()
-          .then((res) => {
-            return res;
-          })
-          .catch((err) => {
-            throw err;
-          })
-    );
-  }
-
-  /**
    * Pool
    * @param {Object} cl this
    * @return {Object}
    */
-  static decodePool() {
+  static getPool() {
     return (
       getPool()
           .then((res) => {
@@ -143,7 +126,7 @@ class MIDMaker {
    */
   encode() {
     MIDMaker.setStart(this);
-    MIDMaker.encodePool()
+    MIDMaker.getPool()
         .then((res) => {
           if (res) {
             const encodePool = res;
@@ -152,21 +135,17 @@ class MIDMaker {
                 .then((res) => {
                   if (res) {
                     // encode and return encoded string only
-                    const str = MIDMaker.transcribe(this.real);
+                    const str = MIDMaker.transcribe(encodePool, this.real);
                   }
                 })
                 .catch((err) => {
                   throw err;
                 });
           }
-          // return;
         })
         .catch((err) => {
           throw err;
         });
-    /* this.encoded =
-      CryptoJS.AES.encrypt(JSON.stringify(this.real), this.key).toString();
-    this.encoded = Buffer.from(this.encoded).toString(this.encodingType); */
   }
 
   /**
@@ -176,7 +155,7 @@ class MIDMaker {
    * @param {String} key
    */
   decode(string, key) {
-    MIDMaker.decodePool()
+    MIDMaker.getPool()
         .then((res) => {
           this.decodePool = JSON.parse(res);
           const decodePool = {};
@@ -190,10 +169,6 @@ class MIDMaker {
         .catch((err) => {
           throw err;
         });
-    /* const debuffed = Buffer.from(string, this.encodingType).toString();
-    // console.log(debuffed);
-    return CryptoJS.AES.decrypt(debuffed, key) */
-    /* .toString(CryptoJS.enc.Utf8); */
   }
 }
 
