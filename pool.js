@@ -13,7 +13,7 @@ const poolArr = [];
 const dirPath =
   `${
     process.cwd()
-  }/node_modules/mid-maker-adv/${
+  }/mid-maker-adv/${
     'resources'
         .split('')
         .reverse()
