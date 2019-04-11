@@ -25,7 +25,6 @@ class MIDMaker {
    * @param {Number} length length of encryption
    * @param {String} encodingType encoding type
    * @param {Number} startPosition range: index of string to begin encoding.
-   * @param {Number} endPosition range: index of string to end encoding.
    * @param {Boolean} random specify start position randomliness.
    * @return {Object}
    */
@@ -35,7 +34,6 @@ class MIDMaker {
       encodingType = obj.hasOwnProperty('encodingType') ?
     obj.encodingType : 'hex',
       startPosition = obj.hasOwnProperty('start') ? obj.start : 0,
-      endPosition = obj.hasOwnProperty('end') ? obj.end : -1,
       random = obj.hasOwnProperty('random') ? obj.random : true) {
     this.string = string;
     this.key = key;
@@ -43,7 +41,7 @@ class MIDMaker {
     this.encodingType = encodingType;
     this.random = random;
     this.startPosition = startPosition;
-    this.endPosition = endPosition;
+    this.endPosition = this.startPosition + length;
     this.strLength = string.length;
     return this;
   }
@@ -95,6 +93,7 @@ class MIDMaker {
         ); */
       }
       cl.startPosition = startPosition;
+      cl.endPosition = startPosition + cl.length;
     }
     return this;
   }
@@ -109,7 +108,8 @@ class MIDMaker {
     return (
       cl.string.substring(
           cl.startPosition,
-          cl.startPosition + cl.length)
+          cl.startPosition + cl.length
+      )
     );
   }
 
@@ -121,39 +121,31 @@ class MIDMaker {
    */
   static transcribe(pool, string) {
     return (
-      string
+      (string
           .split('').map(
               (el, i) => {
                 return pool[el];
               }
-          )[0]
-          .join('')
+          )).join('')
     );
   }
 
   /**
    * encodes the already specified string
    * @function encode
+   * @return {Promise} Promise Object
    */
   encode() {
     MIDMaker.setStart(this);
-    MIDMaker.getPool()
+    return MIDMaker.getPool()
         .then((res) => {
           if (res) {
-            const encodePool = res;
+            const encodePool = JSON.parse(res);
             this.real = MIDMaker.str2BEncoded(this);
-            getPool()
-                .then((res) => {
-                  if (res) {
-                    // encode and return encoded string only
-                    const str = MIDMaker.transcribe(encodePool, this.real);
-                    console.log(str);
-                    return str;
-                  }
-                })
-                .catch((err) => {
-                  throw err;
-                });
+            // encode and return encoded string only
+            const str = MIDMaker.transcribe(encodePool, this.real);
+            console.log(this.real, str);
+            return str;
           }
         })
         .catch((err) => {
@@ -166,9 +158,10 @@ class MIDMaker {
    * @name decode
    * @param {String} string
    * @param {String} key
+   * @return {Promise}
    */
   decode(string) {
-    MIDMaker.getPool()
+    return MIDMaker.getPool()
         .then((res) => {
           this.decodePool = JSON.parse(res);
           const decodePool = {};
@@ -179,7 +172,7 @@ class MIDMaker {
           }
           // encode and return encoded string only
           const str = MIDMaker.transcribe(decodePool, string);
-          console.log(str);
+          console.log(string, str);
           return str;
         })
         .catch((err) => {

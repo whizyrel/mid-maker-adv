@@ -13,7 +13,7 @@ const poolArr = [];
 const dirPath =
   `${
     process.cwd()
-  }/mid-maker-adv/${
+  }/node_modules/mid-maker-adv/${
     'resources'
         .split('')
         .reverse()
@@ -163,18 +163,26 @@ module.exports = {
     );
   },
   getPool: () => {
-    console.log(filePath, dirPath);
     return (
       new Promise(
           (resolve, reject) => {
             fs.readFile(
                 `${
-                  filePath
-                }`,
+                  process.cwd()
+                }/node_modules/mid-maker-adv/${
+                  'resources'
+                      .split('')
+                      .reverse()
+                      .join('')
+                }/${
+                  'chaRpool'
+                      .split('')
+                      .reverse()
+                      .join('')
+                }.json`,
                 'utf8',
                 (err, data) => {
                   if (err) reject(err);
-                  console.log(data);
                   resolve(data.toString());
                 }
             );
