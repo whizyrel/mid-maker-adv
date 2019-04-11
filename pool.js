@@ -2,14 +2,18 @@ const fs = require('fs');
 // const path = require('path');
 
 const {
-  encodePool, upperCasePool,
-  lowerCasePool, numberCharPool,
+  encodePool,
+  upperCasePool,
+  lowerCasePool,
+  numberCharPool,
 } = require('./charList');
 
 // randomly fills poolArr with chars
 const poolArr = [];
 const dirPath =
-  `./${
+  `${
+    process.cwd()
+  }/node_modules/mid-maker-adv/${
     'resources'
         .split('')
         .reverse()
@@ -19,14 +23,15 @@ const dirPath =
 /* const dirPath =
   `test/mid-maker-adv/${'resources'.split('').reverse().join('')}`; */
 
-const filePath = `${
-  dirPath
-}/${
-  'chaRpool'
-      .split('')
-      .reverse()
-      .join('')
-}.json`;
+const filePath =
+  `${
+    dirPath
+  }/${
+    'chaRpool'
+        .split('')
+        .reverse()
+        .join('')
+  }.json`;
 
 const fillPoolArr = () => {
   const ranNoPool = [];
@@ -49,13 +54,12 @@ const fillPoolArr = () => {
 
             while (ranNoPool.includes(ranNo)) {
               ranNo = Math.floor(
-                  Math.random() *
-                [
-                  upperCasePool,
-                  lowerCasePool,
-                  numberCharPool,
-                ]
-                    .length
+                  Math.random() * [
+                    upperCasePool,
+                    lowerCasePool,
+                    numberCharPool,
+                  ]
+                      .length
               );
             }
 
@@ -79,21 +83,22 @@ const writeJSON = (data) => {
   return (
     new Promise(
         (resolve, reject) => {
-          fs.mkdir(`${
-            dirPath
-          }
-              `, {recursive: true}, (err) => {
-            if (err) throw err;
-            fs.writeFile(
-                `${filePath}`,
-                JSON.stringify(data),
-                (err) => {
-                  if (!err) return resolve(true);
-                  return reject(new Error(`${err}`));
-                }
-            );
-          }
-          );
+          fs.mkdir(
+              `${
+                dirPath
+              }`, {
+                recursive: true,
+              }, (err) => {
+                if (err) throw err;
+                fs.writeFile(
+                    `${filePath}`,
+                    JSON.stringify(data),
+                    (err) => {
+                      if (!err) return resolve(true);
+                      return reject(new Error(`${err}`));
+                    }
+                );
+              });
         })
   );
 };
@@ -138,22 +143,20 @@ module.exports = {
             writeJSON(encodePool)
                 .then((res) => {
                   if (res) {
-                    return resolve(
-                        {
-                          pool: fs.readFile(
-                              filePath,
-                              (err, data) => {
-                                if (err) throw err;
-                                return JSON.parse(data);
-                              }),
-                          status: status,
-                        }
-                    );
+                    return resolve({
+                      pool: fs.readFile(
+                          filePath,
+                          (err, data) => {
+                            if (err) throw err;
+                            return JSON.parse(data);
+                          }),
+                      status: status,
+                    });
                   }
                   return reject(new Error('Something went wrong!'));
                 })
                 .catch((err) => {
-                  return new Error(`Something went wrong! => ${err}`);
+                  throw new Error(`Something went wrong! => ${err}`);
                 });
           }
       )
