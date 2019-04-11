@@ -1,6 +1,6 @@
 {
   "name": "mid-maker-adv",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "makes an encrypted ID out of a supplied string and according to configurations passed",
   "main": "mid-maker-adv.js",
   "scripts": {
