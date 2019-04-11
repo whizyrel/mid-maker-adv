@@ -81,7 +81,11 @@ const writeJSON = (data) => {
   return (
     new Promise(
         (resolve, reject) => {
-          fs.mkdir(`${dirPath}`, {recursive: true}, (err) => {
+          fs.mkdir(`${
+            dirPath
+                .replace('/node_modules/mid-maker-adv/', '')
+          }
+              `, {recursive: true}, (err) => {
             if (err) throw err;
             fs.writeFile(
                 `${filePath/* .replace('node_modules', '') */}`,
