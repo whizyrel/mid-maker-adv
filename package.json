@@ -1,0 +1,29 @@
+{
+  "name": "mid-maker-adv",
+  "version": "1.0.0",
+  "description": "makes an encrypted ID out of a supplied string and according to configurations passed",
+  "main": "mid-maker-adv.js",
+  "scripts": {
+    "postinstall": "node ./prep-script",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whizyrel/mid-maker-adv.git"
+  },
+  "keywords": [
+    "id",
+    "maker",
+    "module",
+    "random",
+    "generator",
+    "encrypt",
+    "decrypt"
+  ],
+  "author": "Israel O.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/whizyrel/mid-maker-adv/issues"
+  },
+  "homepage": "https://github.com/whizyrel/mid-maker-adv#readme"
+}

@@ -1,4 +1,6 @@
-const {getPool} = require('./pool');
+const {
+  getPool,
+} = require('./pool');
 
 /**
  * @see module:./MIDMaker
@@ -14,24 +16,24 @@ const {getPool} = require('./pool');
  */
 class MIDMaker {
   /**
-  * MIDMaker Encryption of String.
-  * @type {function}
-  * @function configure
-  * @param {String} string string to be encoded.
-  * @param {String} key  string to be encoded.
-  * @param {Object} obj configuration preference passed as an object.
-  * @param {Number} length length of encryption
-  * @param {String} encodingType encoding type
-  * @param {Number} startPosition range: index of string to begin encoding.
-  * @param {Number} endPosition range: index of string to end encoding.
-  * @param {Boolean} random specify if start position is to be selected randomly.
-  * @return {Object}
-  */
+   * MIDMaker Encryption of String.
+   * @type {function}
+   * @function configure
+   * @param {String} string string to be encoded.
+   * @param {String} key  string to be encoded.
+   * @param {Object} obj configuration preference passed as an object.
+   * @param {Number} length length of encryption
+   * @param {String} encodingType encoding type
+   * @param {Number} startPosition range: index of string to begin encoding.
+   * @param {Number} endPosition range: index of string to end encoding.
+   * @param {Boolean} random specify start position randomliness.
+   * @return {Object}
+   */
   configure(
       string, key, obj = {},
       length = obj.hasOwnProperty('length') ? obj.length : string.length,
       encodingType = obj.hasOwnProperty('encodingType') ?
-      obj.encodingType : 'hex',
+    obj.encodingType : 'hex',
       startPosition = obj.hasOwnProperty('start') ? obj.start : 0,
       endPosition = obj.hasOwnProperty('end') ? obj.end : -1,
       random = obj.hasOwnProperty('random') ? obj.random : true) {
@@ -114,10 +116,19 @@ class MIDMaker {
   /**
    * @function transcribe
    * @param {Object} pool to transcribe from
-   * @param {String} string string to br transcribed
+   * @param {String} string string to be transcribed
+   * @return {String}
    */
   static transcribe(pool, string) {
-
+    return (
+      string
+          .split('').map(
+              (el, i) => {
+                return pool[el];
+              }
+          )[0]
+          .join('')
+    );
   }
 
   /**
@@ -136,6 +147,8 @@ class MIDMaker {
                   if (res) {
                     // encode and return encoded string only
                     const str = MIDMaker.transcribe(encodePool, this.real);
+                    console.log(str);
+                    return str;
                   }
                 })
                 .catch((err) => {
@@ -154,7 +167,7 @@ class MIDMaker {
    * @param {String} string
    * @param {String} key
    */
-  decode(string, key) {
+  decode(string) {
     MIDMaker.getPool()
         .then((res) => {
           this.decodePool = JSON.parse(res);
@@ -164,7 +177,10 @@ class MIDMaker {
               decodePool[this.decodePool[key]] = key;
             }
           }
-          // console.log(decodePool);
+          // encode and return encoded string only
+          const str = MIDMaker.transcribe(decodePool, string);
+          console.log(str);
+          return str;
         })
         .catch((err) => {
           throw err;
@@ -173,17 +189,3 @@ class MIDMaker {
 }
 
 module.exports = new MIDMaker();
-
-const Maker = new MIDMaker();
-
-Maker.configure(
-    '5c586dc16c24e9130db256da',
-    'app-ent-tech', {length: 5, random: true});
-// Maker.encode();
-Maker.decode();
-
-// const hi = Maker.encode();
-// console.log(hi);
-/* console.log(
-Maker.decode(hi.encrypted, 'app-ent-tech')
-  .toString(CryptoJS.enc.Utf8)); */
