@@ -9,9 +9,7 @@ const {
 // randomly fills poolArr with chars
 const poolArr = [];
 const dirPath =
-  `${
-    process.cwd()
-  }/node_modules/mid-maker-adv/${
+  `./${
     'resources'
         .split('')
         .reverse()
@@ -83,12 +81,11 @@ const writeJSON = (data) => {
         (resolve, reject) => {
           fs.mkdir(`${
             dirPath
-                .replace('/node_modules/mid-maker-adv/', '')
           }
               `, {recursive: true}, (err) => {
             if (err) throw err;
             fs.writeFile(
-                `${filePath/* .replace('node_modules', '') */}`,
+                `${filePath}`,
                 JSON.stringify(data),
                 (err) => {
                   if (!err) return resolve(true);
